@@ -1,0 +1,30 @@
+---
+import Base from '../../layouts/Base.astro';
+import CalculatorApp from '../../components/CalculatorApp.astro';
+import { calculators } from '../../lib/calculators';
+import { allPosts } from '../../lib/blog';
+
+export function getStaticPaths() {
+  return calculators.map((c) => ({ params: { slug: c.slug }, props: { calc: c } }));
+}
+const { calc } = Astro.props;
+const companion = (await allPosts()).find((p) => p.data.calculator === calc.slug);
+const site = Astro.site!.href.replace(/\/$/, '');
+---
+<Base
+  title={`${calc.title} calculator`}
+  description={`${calc.blurb} Free calculator with assumptions shown.`}
+  jsonLd={{
+    '@context': 'https://schema.org', '@type': 'WebApplication', name: calc.title, description: calc.blurb,
+    applicationCategory: 'FinanceApplication', operatingSystem: 'Any', url: `${site}/calculators/${calc.slug}`,
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  }}
+>
+  <div class="wrap page-head">
+    <p class="eyebrow"><a href="/calculators" style="text-decoration:none">Calculators</a></p>
+    <h1 style="font-size:clamp(2rem,4.5vw,3.2rem)">{calc.title}</h1>
+    <p>{calc.blurb}</p>
+    {companion && <p><a href={`/blog/${companion.id}`}>Read the thinking behind this calculator →</a></p>}
+  </div>
+  <div class="wrap"><CalculatorApp slug={calc.slug} /></div>
+</Base>

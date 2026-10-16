@@ -1,0 +1,17 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../config';
+---
+<Base title="Unsubscribe" description="How to stop receiving emails from Money Made Simple, or ask us to delete your data." noindex>
+  <div class="narrow page-head"><p class="eyebrow">Your choice</p><h1 style="font-size:clamp(2rem,5vw,3rem)">Unsubscribe</h1></div>
+  <div class="narrow prose">
+    <p>You can leave at any time, and it takes one click.</p>
+    <ol>
+      <li><strong>Fastest:</strong> open any email from us and click <strong>Unsubscribe</strong> at the bottom. You’re removed straight away.</li>
+      <li><strong>Can’t find an email?</strong> Email <a href={`mailto:${SITE.contactEmail}?subject=Unsubscribe`}>{SITE.contactEmail}</a> from the address you signed up with and we’ll remove you.</li>
+      <li><strong>Want your data deleted too?</strong> Say so in the same email and we’ll erase it, apart from a minimal record that you opted out so we never email you again.</li>
+    </ol>
+    <p>Unsubscribing doesn’t break anything: blog posts stay open to everyone, and on this device the calculators stay unlocked.</p>
+    <p class="muted">See our <a href="/privacy">privacy policy</a> for details.</p>
+  </div>
+</Base>

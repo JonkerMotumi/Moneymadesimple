@@ -1,0 +1,22 @@
+---
+import { CONSENT_TEXT } from '../config';
+interface Props { id: string; cta?: string; blurb?: string }
+const { id, cta = 'Get free access', blurb } = Astro.props;
+---
+<div class="signup-wrap">
+  {blurb && <p class="signup-blurb">{blurb}</p>}
+  <form class="signup" data-signup-form method="post" action="/api/subscribe" novalidate>
+    <div class="row">
+      <label class="sr-only" for={`${id}-email`}>Email address</label>
+      <input id={`${id}-email`} name="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com" required aria-describedby={`${id}-msg`} />
+      <button class="btn" type="submit">{cta}</button>
+    </div>
+    <label class="consent">
+      <input type="checkbox" name="consent" required />
+      <span>{CONSENT_TEXT} <a href="/privacy">Privacy policy</a>.</span>
+    </label>
+    <input class="hp" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" />
+    <p class="msg" id={`${id}-msg`} role="status" aria-live="polite"></p>
+  </form>
+</div>
+<p class="signup-done">You're in. <a href="/calculators">Open the calculators →</a></p>

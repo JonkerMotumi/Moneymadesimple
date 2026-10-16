@@ -1,0 +1,59 @@
+.calc { margin-block: 28px; }
+.calc-grid { display: grid; gap: 20px; align-items: start; grid-template-columns: minmax(0, 1fr); }
+.calc-grid > * { min-width: 0; }
+@media (min-width: 900px) { .calc-grid { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); } .calc-inputs { position: sticky; top: 16px; } }
+.calc-inputs { padding: 24px; }
+.calc-inputs h3 { margin-bottom: 18px; }
+.field { margin-bottom: 18px; }
+.field label { display: block; font-weight: 600; font-size: .95rem; margin-bottom: 6px; }
+.control { display: flex; align-items: center; background: var(--bg); border: 1.5px solid var(--line); border-radius: 12px; overflow: hidden; }
+.control:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.control input { flex: 1; min-width: 0; border: 0; background: transparent; color: var(--ink); font: 500 1.1rem var(--sans); padding: 13px 14px; min-height: 50px; font-variant-numeric: tabular-nums; }
+.control input:focus { outline: none; }
+.affix { color: var(--muted); padding: 0 4px 0 14px; font-weight: 500; }
+.affix.post { padding: 0 14px 0 0; }
+.field.bad .control { border-color: var(--danger); }
+.hint { margin: 6px 0 0; font-size: .84rem; color: var(--muted); min-height: 0; }
+.hint:empty { display: none; }
+.field.bad .hint { color: var(--danger); }
+
+.calc-results { position: relative; padding: 26px; min-height: 340px; overflow: hidden; display: grid; }
+.calc-results > .results, .calc-results > .gate { grid-area: 1 / 1; }
+.results .h-label { margin: 0 0 4px; color: var(--muted); font-weight: 600; }
+.results .h-value { margin: 0; font: 700 clamp(2.3rem, 6vw, 3.6rem)/1.05 var(--serif); color: var(--accent); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.results .h-sub { margin: 6px 0 20px; color: var(--muted); }
+.rows { margin: 0; display: grid; }
+.rows .r { display: flex; justify-content: space-between; gap: 16px; padding: 11px 0; border-top: 1px solid var(--line); }
+.rows dt { color: var(--muted); font-size: .96rem; }
+.rows dd { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+.rows .strong dt { color: var(--ink); font-weight: 600; }
+.rows .strong dd { color: var(--accent); }
+.chart { margin-top: 22px; }
+.chart h4 { margin: 0 0 8px; font: 600 .95rem var(--sans); }
+.chart svg { width: 100%; height: auto; }
+.chart .grid-line { stroke: var(--line); stroke-width: 1; }
+.chart .tick { fill: var(--muted); font: 11px var(--sans); }
+.chart .l-muted { fill: none; stroke: var(--flat); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+.chart .l-accent { fill: none; stroke: var(--accent); stroke-width: 3.5; stroke-linejoin: round; stroke-linecap: round; }
+.chart .a-fill { fill: var(--accent); opacity: .12; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: .86rem; color: var(--muted); margin-top: 6px; }
+.legend i { display: inline-block; width: 20px; height: 4px; border-radius: 4px; margin-right: 8px; vertical-align: middle; }
+.i-muted { background: var(--flat); } .i-accent { background: var(--accent); }
+.notes { color: var(--danger); font-size: .92rem; margin: 14px 0 0; padding-left: 1.1em; }
+
+/* The gate: real layout, masked numbers, blurred, with the signup form on top. */
+.gate { display: none; }
+.calc[data-locked] .results { filter: blur(9px); opacity: .55; user-select: none; pointer-events: none; }
+.calc[data-locked] .gate { display: grid; place-items: center; margin: -26px; padding: 16px; background: color-mix(in srgb, var(--surface) 55%, transparent); }
+.is-unlocked .gate { display: none !important; }
+.gate-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 24px; width: min(100%, 460px); }
+.gate-card h3 { margin-bottom: 8px; }
+.gate-card p { color: var(--muted); }
+
+.assumptions { padding: 22px 26px; margin-top: 20px; }
+.assumptions h3 { font-size: 1.05rem; }
+.assumptions ul { margin: 0 0 8px; padding-left: 1.2em; color: var(--muted); font-size: .94rem; }
+.assumptions li { margin-bottom: 6px; }
+.assumptions .dyn-notes { color: var(--ink); }
+.assumptions .fine { font-size: .85rem; color: var(--muted); margin: 10px 0 0; }
+@media (max-width: 560px) { .rows .r { flex-direction: column; gap: 2px; } .rows dd { text-align: left; white-space: normal; } .calc-results { padding: 20px; } .calc[data-locked] .gate { margin: -20px; } }

@@ -1,0 +1,13 @@
+---
+import Base from '../../layouts/Base.astro';
+import CalcTile from '../../components/CalcTile.astro';
+import { calculators } from '../../lib/calculators';
+---
+<Base title="Free money calculators" description="Free calculators for credit card payoff, mortgage extra payments, cash-out refinancing and late-starter savings. Use your own numbers.">
+  <div class="wrap page-head">
+    <p class="eyebrow">Free calculators</p>
+    <h1>See what your choices really cost.</h1>
+    <p>Pick a calculator, type in your own numbers, and see the result with its assumptions beside it. Enter your email once to unlock them all.</p>
+  </div>
+  <div class="wrap"><div class="grid">{calculators.map((c) => <CalcTile calc={c} />)}</div></div>
+</Base>

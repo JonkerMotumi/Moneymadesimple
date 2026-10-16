@@ -1,0 +1,14 @@
+---
+import { fmtDate, readingMinutes, slugify, type Post } from '../lib/blog';
+const { post } = Astro.props as { post: Post };
+---
+<a class="card tile" href={`/blog/${post.id}`}>
+  <span class="pill">{post.data.category}</span>
+  <h3>{post.data.title}</h3>
+  <p>{post.data.description}</p>
+  <span class="meta muted">{fmtDate(post.data.date)} · {readingMinutes(post.body)} min read</span>
+</a>
+<style>
+  .meta { font-size: .85rem; }
+  .tile .pill { justify-self: start; }
+</style>

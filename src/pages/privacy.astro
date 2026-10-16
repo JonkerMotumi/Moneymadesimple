@@ -1,0 +1,40 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../config';
+const updated = '16 October 2026';
+---
+<Base title="Privacy policy" description="How Money Made Simple collects, uses and protects your email address and data, and how to unsubscribe or delete your data.">
+  <div class="narrow page-head"><p class="eyebrow">Legal</p><h1 style="font-size:clamp(2rem,5vw,3rem)">Privacy policy</h1><p class="muted">Last updated {updated}</p></div>
+  <div class="narrow prose">
+    <p class="callout"><strong>Template notice for the site owner:</strong> this policy is a plain-English starting point written to reflect how the site is built. Have it reviewed by a lawyer for your jurisdiction (POPIA, GDPR) and fill in the bracketed details before launch. Delete this box when done.</p>
+
+    <h2>Who we are</h2>
+    <p>{SITE.legalName} (“we”, “us”) runs this website. We are the “responsible party” under South Africa’s Protection of Personal Information Act (POPIA) and the “controller” under the GDPR. Our information officer is {SITE.privacyOfficer}. Contact: <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a>. [Registered address / company number.]</p>
+
+    <h2>What we collect, and why</h2>
+    <table>
+      <thead><tr><th>Data</th><th>Why</th><th>Basis</th></tr></thead>
+      <tbody>
+        <tr><td>Your email address</td><td>To unlock the calculators, send the free guide, and send occasional emails</td><td>Your consent</td></tr>
+        <tr><td>When you signed up, the page you signed up on, and your IP address at signup</td><td>To keep proof of your consent and to see which pages work</td><td>Legitimate interest; legal obligation to evidence consent</td></tr>
+        <tr><td>Privacy-friendly visit statistics (page views, referrer, country, device type)</td><td>To understand which pages help people</td><td>Legitimate interest</td></tr>
+      </tbody>
+    </table>
+    <p><strong>The numbers you type into a calculator stay in your browser.</strong> They are calculated on your device and are not sent to us or stored.</p>
+
+    <h2>Cookies and similar storage</h2>
+    <p>After you sign up we store one small “access” cookie (<code>{SITE.accessCookie}</code>) and a matching item in your browser’s local storage so you aren’t asked again. We also store your light/dark theme choice. These are strictly functional. Our analytics are cookieless.</p>
+
+    <h2>Who we share it with</h2>
+    <p>We use service providers to run the site, under contract: an email service provider (MailerLite) to store your email and send our emails, and a hosting and network provider (Cloudflare) to deliver the site. [Analytics provider, e.g. Plausible.] These providers may process data outside your country. We do not sell your data.</p>
+
+    <h2>How long we keep it</h2>
+    <p>We keep your email until you unsubscribe or ask us to delete it. We keep a minimal record that you unsubscribed so that we do not email you again.</p>
+
+    <h2>Your rights</h2>
+    <p>You can ask us to access, correct or delete your data, to restrict or object to how we use it, and to withdraw your consent at any time. Email <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a>. To stop emails, use the unsubscribe link in any email or visit the <a href="/unsubscribe">unsubscribe page</a>. You may also complain to your data-protection regulator, such as the Information Regulator (South Africa) or your local EU authority.</p>
+
+    <h2>Changes</h2>
+    <p>If we change this policy in a way that matters, we’ll update the date above and tell subscribers if we need your fresh consent.</p>
+  </div>
+</Base>

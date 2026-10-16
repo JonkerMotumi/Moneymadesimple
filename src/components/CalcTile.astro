@@ -1,0 +1,9 @@
+---
+import type { CalculatorDef } from '../lib/calculators/types';
+const { calc } = Astro.props as { calc: CalculatorDef };
+---
+<a class="card tile" href={`/calculators/${calc.slug}`}>
+  <h3>{calc.title}</h3>
+  <p>{calc.blurb}</p>
+  <span class="go">Try it →</span>
+</a>

@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../config';
+---
+<Base title="Terms of use" description="The terms for using the Money Made Simple website and calculators: educational use only, no financial advice.">
+  <div class="narrow page-head"><p class="eyebrow">Legal</p><h1 style="font-size:clamp(2rem,5vw,3rem)">Terms of use</h1><p class="muted">Last updated 16 October 2026</p></div>
+  <div class="narrow prose">
+    <p class="callout"><strong>Template notice for the site owner:</strong> have these terms reviewed by a lawyer before launch, then delete this box.</p>
+    <h2>Educational only</h2>
+    <p>Everything on {SITE.name}, including the calculators, articles and the free guide, is for general education. It is <strong>not financial, investment, tax or legal advice</strong>, and it does not take your personal circumstances into account. Speak to a qualified, registered professional before you make a money decision.</p>
+    <h2>Estimates, not promises</h2>
+    <p>Calculator results are estimates based on the numbers you enter and the assumptions shown next to each result. Real rates, fees, taxes and markets change. Investment returns are never guaranteed. We do our best to keep the maths correct but give no warranty that results are accurate or fit for your purpose.</p>
+    <h2>Using the site</h2>
+    <p>You may use the site for personal, non-commercial purposes. Please don’t copy the calculators or articles wholesale, scrape the site, or try to disrupt it.</p>
+    <h2>Links and affiliates</h2>
+    <p>We may link to other sites. If a link is an affiliate link we say so clearly on that page. We aren’t responsible for other sites.</p>
+    <h2>Liability</h2>
+    <p>To the extent the law allows, we aren’t liable for any loss arising from your use of, or reliance on, the site. Nothing here limits liability that cannot lawfully be limited.</p>
+    <h2>Contact</h2>
+    <p><a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a></p>
+  </div>
+</Base>

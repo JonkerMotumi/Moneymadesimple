@@ -1,0 +1,53 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import CalcTile from '../components/CalcTile.astro';
+import PostCard from '../components/PostCard.astro';
+import { calculators } from '../lib/calculators';
+import { allPosts } from '../lib/blog';
+import { SITE } from '../config';
+
+const posts = (await allPosts()).slice(0, 3);
+const site = Astro.site!.href.replace(/\/$/, '');
+---
+<Base
+  title={SITE.name}
+  description="Free calculators that show what your money decisions really cost, using your own numbers. Unlock them all with your email."
+  jsonLd={[
+    { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE.name, url: site },
+    { '@context': 'https://schema.org', '@type': 'Organization', name: SITE.legalName, url: site },
+  ]}
+>
+  <Hero />
+
+  <section class="wrap block" aria-labelledby="calcs-h">
+    <p class="eyebrow">The calculators</p>
+    <h2 id="calcs-h">Your numbers, not an average.</h2>
+    <p class="lead">Each one shows the real cost of a choice, and every assumption behind it.</p>
+    <div class="grid">{calculators.map((c) => <CalcTile calc={c} />)}</div>
+  </section>
+
+  <section class="wrap block trust" aria-labelledby="trust-h">
+    <h2 id="trust-h">Built to be trusted.</h2>
+    <div class="grid">
+      <div><h3>Assumptions on show</h3><p>Every result sits beside the assumptions behind it, so you can judge it, not just believe it.</p></div>
+      <div><h3>Your numbers stay with you</h3><p>The sums run in your browser. The figures you type never leave your device.</p></div>
+      <div><h3>Explained in plain English</h3><p>Each calculator has an article that walks through the thinking, with the calculator right there.</p></div>
+    </div>
+  </section>
+
+  {posts.length > 0 && (
+    <section class="wrap block" aria-labelledby="blog-h">
+      <p class="eyebrow">From the blog</p>
+      <h2 id="blog-h">The thinking behind the numbers.</h2>
+      <div class="grid">{posts.map((p) => <PostCard post={p} />)}</div>
+      <p style="margin-top:22px"><a href="/blog">All articles →</a></p>
+    </section>
+  )}
+</Base>
+
+<style>
+  .block { margin-top: clamp(64px, 9vw, 120px); }
+  .trust h3 { font-size: 1.15rem; margin-bottom: .3em; }
+  .trust p { color: var(--muted); }
+</style>

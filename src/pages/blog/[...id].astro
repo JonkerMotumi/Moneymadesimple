@@ -1,0 +1,86 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import CalculatorApp from '../../components/CalculatorApp.astro';
+import SignupForm from '../../components/SignupForm.astro';
+import AffiliateDisclosure from '../../components/AffiliateDisclosure.astro';
+import PostCard from '../../components/PostCard.astro';
+import { allPosts, fmtDate, readingMinutes, slugify } from '../../lib/blog';
+import { getCalculator } from '../../lib/calculators';
+import { SITE } from '../../config';
+
+export async function getStaticPaths() {
+  const posts = await allPosts();
+  return posts.map((post) => ({ params: { id: post.id }, props: { post, related: posts.filter((p) => p.id !== post.id).slice(0, 2) } }));
+}
+const { post, related } = Astro.props;
+const { Content } = await render(post);
+const d = post.data;
+const calc = d.calculator ? getCalculator(d.calculator) : undefined;
+if (d.calculator && !calc) throw new Error(`${post.id}: no calculator with slug "${d.calculator}"`);
+const site = Astro.site!.href.replace(/\/$/, '');
+const url = `${site}/blog/${post.id}`;
+---
+<Base
+  title={d.title}
+  description={d.description}
+  ogType="article"
+  jsonLd={[
+    {
+      '@context': 'https://schema.org', '@type': 'Article', headline: d.title, description: d.description,
+      datePublished: d.date.toISOString(), dateModified: (d.updated ?? d.date).toISOString(),
+      author: { '@type': 'Organization', name: SITE.name }, publisher: { '@type': 'Organization', name: SITE.name },
+      mainEntityOfPage: url,
+    },
+    {
+      '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Blog', item: `${site}/blog` },
+        { '@type': 'ListItem', position: 2, name: d.title, item: url },
+      ],
+    },
+  ]}
+>
+  <article>
+    <header class="narrow page-head">
+      <p><a class="pill" href={`/blog/category/${slugify(d.category)}`}>{d.category}</a></p>
+      <h1 style="font-size:clamp(2rem,5vw,3.2rem)">{d.title}</h1>
+      <p class="muted">{fmtDate(d.date)} · {readingMinutes(post.body)} min read{calc && <> · <a href="#calculator">Jump to the calculator</a></>}</p>
+    </header>
+
+    <div class="narrow prose">
+      {d.affiliate && <AffiliateDisclosure />}
+      <Content />
+    </div>
+
+    {calc && (
+      <div class="wrap" id="calculator" style="scroll-margin-top:16px">
+        <div class="narrow" style="margin-top:56px"><h2>Try it with your own numbers</h2></div>
+        <CalculatorApp slug={calc.slug} />
+      </div>
+    )}
+
+    <aside class="narrow end-cta" aria-labelledby="cta-h">
+      <div class="card cta-card">
+        <h2 id="cta-h">Get the free guide</h2>
+        <div class="signup-wrap-outer">
+          <SignupForm id={`post-${post.id}`} cta="Send me the guide" blurb="A short, plain-English guide to the money decisions that matter most, plus free access to every calculator." />
+        </div>
+      </div>
+    </aside>
+
+    {related.length > 0 && (
+      <section class="wrap" style="margin-top:72px" aria-labelledby="more-h">
+        <h2 id="more-h">Keep reading</h2>
+        <div class="grid">{related.map((p) => <PostCard post={p} />)}</div>
+      </section>
+    )}
+  </article>
+</Base>
+
+<style>
+  .end-cta { margin-top: 64px; }
+  .cta-card { padding: 28px; background: var(--accent-soft); box-shadow: none; }
+  .cta-card h2 { font-size: 1.5rem; }
+  .cta-card :global(.signup-blurb) { color: var(--muted); }
+</style>

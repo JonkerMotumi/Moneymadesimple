@@ -1,0 +1,64 @@
+---
+import SignupForm from './SignupForm.astro';
+import { getCalculator } from '../lib/calculators';
+import { SITE } from '../config';
+import '../styles/calc.css';
+
+interface Props { slug: string }
+const { slug } = Astro.props;
+const calc = getCalculator(slug);
+if (!calc) throw new Error(`Unknown calculator "${slug}". Check the slug in the page or article front matter.`);
+const affix = (kind: string) =>
+  kind === 'money' ? { pre: SITE.currency } : kind === 'percent' ? { post: '%' } : kind === 'years' ? { post: 'years' } : kind === 'months' ? { post: 'months' } : {};
+---
+<section class="calc" data-calc={calc.slug} aria-labelledby={`${calc.slug}-h`}>
+  <h2 class="sr-only" id={`${calc.slug}-h`}>{calc.title} calculator</h2>
+  <div class="calc-grid">
+    <form class="card calc-inputs" data-inputs novalidate onsubmit="return false">
+      <h3>Your numbers</h3>
+      {calc.inputs.map((i) => {
+        const a = affix(i.kind);
+        return (
+          <div class="field">
+            <label for={`${calc.slug}-${i.id}`}>{i.label}</label>
+            <div class="control">
+              {a.pre && <span class="affix pre" aria-hidden="true">{a.pre}</span>}
+              <input
+                id={`${calc.slug}-${i.id}`} name={i.id} type="text" inputmode="decimal" autocomplete="off"
+                value={String(i.default)} data-kind={i.kind} data-min={i.min} data-max={i.max}
+                aria-describedby={`${calc.slug}-${i.id}-hint`}
+              />
+              {a.post && <span class="affix post" aria-hidden="true">{a.post}</span>}
+            </div>
+            <p class="hint" id={`${calc.slug}-${i.id}-hint`}>{i.hint ?? ''}</p>
+          </div>
+        );
+      })}
+    </form>
+
+    <div class="results-col">
+      <div class="card calc-results" data-results-card>
+        <div class="results" data-output aria-live="polite"></div>
+        <div class="gate" data-gate>
+          <div class="gate-card">
+            <p class="eyebrow">Free access</p>
+            <h3>See your results</h3>
+            <p>Enter your email to unlock every calculator on the site. We’ll also send you a free guide.</p>
+            <SignupForm id={`gate-${calc.slug}`} cta="Unlock my results" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="card assumptions" aria-labelledby={`${calc.slug}-as`}>
+    <h3 id={`${calc.slug}-as`}>Assumptions behind these results</h3>
+    <ul>{calc.assumptions.map((a) => <li>{a}</li>)}</ul>
+    <ul class="dyn-notes" data-notes></ul>
+    <p class="fine">Your numbers are calculated in your browser and are never sent to us. Educational only, not financial or legal advice.</p>
+  </aside>
+</section>
+
+<script>
+  import '../scripts/calculator';
+</script>
