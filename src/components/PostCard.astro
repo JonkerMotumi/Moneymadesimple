@@ -1,8 +1,9 @@
 ---
+import { u } from '../lib/url';
 import { fmtDate, readingMinutes, slugify, type Post } from '../lib/blog';
 const { post } = Astro.props as { post: Post };
 ---
-<a class="card tile" href={`/blog/${post.id}`}>
+<a class="card tile" href={u(`/blog/${post.id}`)}>
   <span class="pill">{post.data.category}</span>
   <h3>{post.data.title}</h3>
   <p>{post.data.description}</p>

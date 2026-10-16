@@ -1,4 +1,5 @@
 ---
+import { u } from '../lib/url';
 import Base from '../layouts/Base.astro';
 import { SITE } from '../config';
 const updated = '16 October 2026';
@@ -32,7 +33,7 @@ const updated = '16 October 2026';
     <p>We keep your email until you unsubscribe or ask us to delete it. We keep a minimal record that you unsubscribed so that we do not email you again.</p>
 
     <h2>Your rights</h2>
-    <p>You can ask us to access, correct or delete your data, to restrict or object to how we use it, and to withdraw your consent at any time. Email <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a>. To stop emails, use the unsubscribe link in any email or visit the <a href="/unsubscribe">unsubscribe page</a>. You may also complain to your data-protection regulator, such as the Information Regulator (South Africa) or your local EU authority.</p>
+    <p>You can ask us to access, correct or delete your data, to restrict or object to how we use it, and to withdraw your consent at any time. Email <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a>. To stop emails, use the unsubscribe link in any email or visit the <a href={u("/unsubscribe")}>unsubscribe page</a>. You may also complain to your data-protection regulator, such as the Information Regulator (South Africa) or your local EU authority.</p>
 
     <h2>Changes</h2>
     <p>If we change this policy in a way that matters, we’ll update the date above and tell subscribers if we need your fresh consent.</p>

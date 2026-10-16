@@ -1,4 +1,5 @@
 ---
+import { u } from '../../../lib/url';
 import Base from '../../../layouts/Base.astro';
 import PostCard from '../../../components/PostCard.astro';
 import { allPosts, slugify } from '../../../lib/blog';
@@ -12,7 +13,7 @@ const { name, posts } = Astro.props;
 ---
 <Base title={`${name} articles`} description={`Articles about ${name.toLowerCase()} from Money Made Simple.`}>
   <div class="wrap page-head">
-    <p class="eyebrow"><a href="/blog" style="text-decoration:none">Blog</a></p>
+    <p class="eyebrow"><a href={u("/blog")} style="text-decoration:none">Blog</a></p>
     <h1>{name}</h1>
   </div>
   <div class="wrap"><div class="grid">{posts.map((p) => <PostCard post={p} />)}</div></div>

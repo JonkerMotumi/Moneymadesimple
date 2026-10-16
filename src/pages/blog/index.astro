@@ -1,4 +1,5 @@
 ---
+import { u } from '../../lib/url';
 import Base from '../../layouts/Base.astro';
 import PostCard from '../../components/PostCard.astro';
 import { allPosts, slugify } from '../../lib/blog';
@@ -11,7 +12,7 @@ const cats = [...new Set(posts.map((p) => p.data.category))];
     <p class="eyebrow">The blog</p>
     <h1>The thinking behind the numbers.</h1>
     <p>Each article explains one money decision in plain English, then lets you try it with your own figures. Open to everyone.</p>
-    <p class="cats">{cats.map((c) => <a class="pill" href={`/blog/category/${slugify(c)}`}>{c}</a>)}</p>
+    <p class="cats">{cats.map((c) => <a class="pill" href={u(`/blog/category/${slugify(c)}`)}>{c}</a>)}</p>
   </div>
   <div class="wrap"><div class="grid">{posts.map((p) => <PostCard post={p} />)}</div></div>
 </Base>

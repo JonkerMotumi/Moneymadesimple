@@ -1,16 +1,17 @@
 ---
-const p = Astro.url.pathname;
+import { u } from '../lib/url';
+const p = Astro.url.pathname.replace(import.meta.env.BASE_URL.replace(/\/$/, ''), '') || '/';
 const cur = (s: string) => (p === s || p.startsWith(s + '/') ? 'page' : undefined);
 ---
 <header class="site-header">
   <div class="wrap">
-    <a class="brand" href="/" aria-label="Money Made Simple, home">
+    <a class="brand" href={u("/")} aria-label="Money Made Simple, home">
       <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)"/><path d="M5 22 C12 21 17 19 27 8" stroke="var(--accent-ink)" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M5 22 L27 18" stroke="var(--accent-ink)" stroke-opacity=".55" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
       Money Made Simple
     </a>
     <nav class="nav" aria-label="Main">
-      <a href="/calculators" aria-current={cur('/calculators')}>Calculators</a>
-      <a href="/blog" aria-current={cur('/blog')}>Blog</a>
+      <a href={u("/calculators")} aria-current={cur('/calculators')}>Calculators</a>
+      <a href={u("/blog")} aria-current={cur('/blog')}>Blog</a>
       <button class="theme-btn" type="button" data-theme-toggle aria-label="Switch between light and dark mode">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
       </button>

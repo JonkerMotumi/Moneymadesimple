@@ -1,0 +1,42 @@
+# Builds the site and publishes it to the `gh-pages` branch so GitHub Pages can host a
+# public PREVIEW. Signups on the preview are simulated (no email service is connected).
+# Your real launch site should use Cloudflare Pages (see docs/GUIDE.md).
+name: Preview on GitHub Pages
+on:
+  push:
+    branches: [main, 'claude/**']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: preview
+  cancel-in-progress: true
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+        env:
+          SITE_URL: https://${{ github.repository_owner }}.github.io
+          BASE_PATH: /${{ github.event.repository.name }}
+          PUBLIC_PREVIEW: '1'
+      - name: Publish to gh-pages
+        run: |
+          cd dist
+          touch .nojekyll
+          git init -q -b gh-pages
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Deploy preview from ${GITHUB_SHA::7}"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" gh-pages

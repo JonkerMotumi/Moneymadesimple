@@ -1,6 +1,9 @@
 import { SITE } from '../config';
 
 const KEY = 'mms_access';
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
+// Preview builds (e.g. GitHub Pages) have no email backend: pretend the signup worked.
+const PREVIEW = import.meta.env.PUBLIC_PREVIEW === '1';
 const root = document.documentElement;
 
 export const isUnlocked = (): boolean => {
@@ -44,7 +47,8 @@ document.querySelectorAll<HTMLFormElement>('[data-signup-form]').forEach((form) 
     }
     btn.disabled = true; msg.textContent = 'Unlocking…';
     try {
-      const res = await fetch('/api/subscribe', {
+      if (PREVIEW) await new Promise((r) => setTimeout(r, 500));
+      const res = PREVIEW ? new Response(JSON.stringify({ ok: true })) : await fetch(`${BASE}/api/subscribe`, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ email, consent, company: fd.get('company'), source: location.pathname }),
@@ -52,7 +56,7 @@ document.querySelectorAll<HTMLFormElement>('[data-signup-form]').forEach((form) 
       const data = await res.json().catch(() => ({}));
       if (!res.ok || !data.ok) throw new Error(data.error || 'Something went wrong. Please try again.');
       (window as any).plausible?.('Signup', { props: { page: location.pathname } });
-      msg.innerHTML = 'You’re in! Check your inbox for the free guide. <a href="/calculators">Open the calculators →</a>'; msg.classList.add('ok');
+      msg.innerHTML = `You’re in! Check your inbox for the free guide. <a href="${BASE}/calculators">Open the calculators →</a>`; msg.classList.add('ok');
       markUnlocked();
     } catch (err) {
       msg.textContent = (err as Error).message; msg.classList.add('err');

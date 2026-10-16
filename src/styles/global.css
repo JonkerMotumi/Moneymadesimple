@@ -158,3 +158,5 @@ p { margin: 0 0 1em; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
 }
+
+.preview-bar { margin: 0; padding: 8px 16px; text-align: center; font-size: .85rem; background: var(--accent-soft); color: var(--ink); border-bottom: 1px solid var(--line); }

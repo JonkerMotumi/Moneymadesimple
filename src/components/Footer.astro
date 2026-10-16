@@ -1,15 +1,16 @@
 ---
+import { u } from '../lib/url';
 import { SITE } from '../config';
 ---
 <footer class="site-footer">
   <div class="wrap">
     <p class="disclaimer">Educational only, not financial or legal advice.</p>
     <nav class="footer-links" aria-label="Footer">
-      <a href="/calculators">Calculators</a>
-      <a href="/blog">Blog</a>
-      <a href="/privacy">Privacy policy</a>
-      <a href="/terms">Terms</a>
-      <a href="/unsubscribe">Unsubscribe</a>
+      <a href={u("/calculators")}>Calculators</a>
+      <a href={u("/blog")}>Blog</a>
+      <a href={u("/privacy")}>Privacy policy</a>
+      <a href={u("/terms")}>Terms</a>
+      <a href={u("/unsubscribe")}>Unsubscribe</a>
     </nav>
     <p>© {new Date().getFullYear()} {SITE.name}. Results are estimates based on the numbers and assumptions shown, not guarantees.</p>
   </div>

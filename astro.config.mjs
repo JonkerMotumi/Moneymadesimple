@@ -3,6 +3,8 @@ import sitemap from '@astrojs/sitemap';
 
 // Set SITE_URL in your host's environment settings once the domain is final.
 const site = process.env.SITE_URL || 'https://moneymadesimple.example';
+// "/" on your own domain; "/RepoName" when previewing on GitHub Pages.
+const base = process.env.BASE_PATH || '/';
 
 // Local-only: lets `npm run dev` answer /api/subscribe by
 // running the exact same code that Cloudflare Pages runs in production.
@@ -30,6 +32,7 @@ const localSubscribeApi = () => {
 
 export default defineConfig({
   site,
+  base,
   integrations: [sitemap({ filter: (p) => !p.includes('/thanks') })],
   vite: { plugins: [localSubscribeApi()] },
   build: { inlineStylesheets: 'auto' },

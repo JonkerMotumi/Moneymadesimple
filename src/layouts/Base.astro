@@ -1,4 +1,5 @@
 ---
+import { u } from '../lib/url';
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -28,7 +29,7 @@ const ld = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
     <link rel="canonical" href={canonical} />
     {noindex && <meta name="robots" content="noindex" />}
     <meta name="theme-color" content="#0b6b3a" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href={u("/favicon.svg")} type="image/svg+xml" />
     <meta property="og:site_name" content={SITE.name} />
     <meta property="og:type" content={ogType} />
     <meta property="og:title" content={fullTitle} />
@@ -53,6 +54,7 @@ const ld = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
     )}
   </head>
   <body>
+    {import.meta.env.PUBLIC_PREVIEW === '1' && <p class="preview-bar">Preview build: signups on this version are simulated and not saved.</p>}
     <a class="skip" href="#main">Skip to content</a>
     <Header />
     <main id="main"><slot /></main>
