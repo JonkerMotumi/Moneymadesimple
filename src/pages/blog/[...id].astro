@@ -6,13 +6,14 @@ import CalculatorApp from '../../components/CalculatorApp.astro';
 import SignupForm from '../../components/SignupForm.astro';
 import AffiliateDisclosure from '../../components/AffiliateDisclosure.astro';
 import PostCard from '../../components/PostCard.astro';
-import { allPosts, fmtDate, readingMinutes, slugify } from '../../lib/blog';
+import { allPosts, fmtDate, readingMinutes } from '../../lib/blog';
+import { getTopic } from '../../lib/topics';
 import { getCalculator } from '../../lib/calculators';
 import { SITE } from '../../config';
 
 export async function getStaticPaths() {
   const posts = await allPosts();
-  return posts.map((post) => ({ params: { id: post.id }, props: { post, related: posts.filter((p) => p.id !== post.id).slice(0, 2) } }));
+  return posts.map((post) => ({ params: { id: post.id }, props: { post, related: [...posts.filter((p) => p.id !== post.id && p.data.topic === post.data.topic), ...posts.filter((p) => p.id !== post.id && p.data.topic !== post.data.topic)].slice(0, 2) } }));
 }
 const { post, related } = Astro.props;
 const { Content } = await render(post);
@@ -36,7 +37,7 @@ const url = `${site}/blog/${post.id}`;
     {
       '@context': 'https://schema.org', '@type': 'BreadcrumbList',
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Blog', item: `${site}/blog` },
+        { '@type': 'ListItem', position: 1, name: getTopic(d.topic)?.name, item: `${site}/topics/${d.topic}` },
         { '@type': 'ListItem', position: 2, name: d.title, item: url },
       ],
     },
@@ -44,7 +45,7 @@ const url = `${site}/blog/${post.id}`;
 >
   <article>
     <header class="narrow page-head">
-      <p><a class="pill" href={u(`/blog/category/${slugify(d.category)}`)}>{d.category}</a></p>
+      <p><a class="pill" href={u(`/topics/${d.topic}`)}>{getTopic(d.topic)?.name}</a></p>
       <h1 style="font-size:clamp(2rem,5vw,3.2rem)">{d.title}</h1>
       <p class="muted">{fmtDate(d.date)} · {readingMinutes(post.body)} min read{calc && <> · <a href="#calculator">Jump to the calculator</a></>}</p>
     </header>

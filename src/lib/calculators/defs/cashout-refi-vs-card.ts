@@ -1,10 +1,11 @@
 import type { CalculatorDef } from '../types';
 import { amortize, fixedPayment, pmt } from '../finance';
-import { duration, money, pct } from '../format';
+import { duration, money } from '../format';
 
 const def: CalculatorDef = {
   slug: 'cash-out-refinance-vs-credit-card',
   title: 'Cash-out refinance vs paying off a credit card',
+  topics: ['debt', 'home'],
   blurb:
     'Rolling a credit card into your mortgage lowers the monthly payment. See what it does to the total you pay.',
   inputs: [

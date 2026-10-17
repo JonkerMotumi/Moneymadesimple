@@ -1,13 +1,31 @@
 ---
 import Base from '../../layouts/Base.astro';
 import CalcTile from '../../components/CalcTile.astro';
+import TopicIcon from '../../components/TopicIcon.astro';
 import { calculators } from '../../lib/calculators';
+import { topics } from '../../lib/topics';
+import { u } from '../../lib/url';
+const groups = topics
+  .map((t) => ({ topic: t, calcs: calculators.filter((c) => (c.topics as string[]).includes(t.slug)) }))
+  .filter((g) => g.calcs.length);
 ---
-<Base title="Free money calculators" description="Free calculators for credit card payoff, mortgage extra payments, cash-out refinancing and late-starter savings. Use your own numbers.">
+<Base title="Free money calculators" description="Free personal finance calculators for budgeting, credit card payoff, mortgage extra payments, cash-out refinancing and saving. Use your own numbers.">
   <div class="wrap page-head">
     <p class="eyebrow">Free calculators</p>
     <h1>See what your choices really cost.</h1>
     <p>Pick a calculator, type in your own numbers, and see the result with its assumptions beside it. Enter your email once to unlock them all.</p>
   </div>
-  <div class="wrap"><div class="grid">{calculators.map((c) => <CalcTile calc={c} />)}</div></div>
+  {groups.map((g) => (
+    <section class="wrap group" aria-labelledby={`g-${g.topic.slug}`}>
+      <h2 id={`g-${g.topic.slug}`}><span class="gi"><TopicIcon icon={g.topic.icon} size={20} /></span><a href={u(`/topics/${g.topic.slug}`)}>{g.topic.name}</a></h2>
+      <div class="grid">{g.calcs.map((c) => <CalcTile calc={c} />)}</div>
+    </section>
+  ))}
 </Base>
+<style>
+  .group { margin-top: 40px; }
+  .group h2 { font-size: 1.35rem; display: flex; align-items: center; gap: 12px; }
+  .group h2 a { color: var(--ink); text-decoration: none; }
+  .group h2 a:hover { color: var(--accent); }
+  .gi { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); }
+</style>

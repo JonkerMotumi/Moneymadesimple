@@ -28,6 +28,21 @@ document.querySelectorAll('[data-theme-toggle]').forEach((b) =>
   }),
 );
 
+// ---- Mobile menu ----
+const header = document.querySelector<HTMLElement>('[data-header]');
+const menuBtn = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+if (header && menuBtn) {
+  const setOpen = (open: boolean) => {
+    header.classList.toggle('is-open', open);
+    menuBtn.setAttribute('aria-expanded', String(open));
+  };
+  menuBtn.addEventListener('click', () => setOpen(!header.classList.contains('is-open')));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && header.classList.contains('is-open')) { setOpen(false); menuBtn.focus(); }
+  });
+  document.addEventListener('click', (e) => { if (!header.contains(e.target as Node)) setOpen(false); });
+}
+
 // ---- Signup forms (hero, calculators, blog) ----
 document.querySelectorAll<HTMLFormElement>('[data-signup-form]').forEach((form) => {
   const msg = form.querySelector<HTMLElement>('.msg')!;

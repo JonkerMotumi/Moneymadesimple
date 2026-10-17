@@ -1,19 +1,61 @@
 ---
-import { u } from '../lib/url';
 import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
 import CalcTile from '../components/CalcTile.astro';
 import PostCard from '../components/PostCard.astro';
-import { calculators } from '../lib/calculators';
+import TopicCard from '../components/TopicCard.astro';
+import SignupForm from '../components/SignupForm.astro';
+import { calculators, defaults, getCalculator } from '../lib/calculators';
+import { topics } from '../lib/topics';
 import { allPosts } from '../lib/blog';
+import { u } from '../lib/url';
 import { SITE } from '../config';
 
-const posts = (await allPosts()).slice(0, 3);
+const all = await allPosts();
+const posts = all.slice(0, 3);
 const site = Astro.site!.href.replace(/\/$/, '') + import.meta.env.BASE_URL.replace(/\/$/, '');
+
+// The "basics" figures are computed from the calculators themselves at build time,
+// so they always match what visitors will see when they try the same numbers.
+const run = (slug: string, v: Record<string, number> = {}) => {
+  const c = getCalculator(slug)!;
+  return c.compute({ ...defaults(c), ...v });
+};
+const row = (out: ReturnType<typeof run>, start: string) => out.rows.find((r) => r.label.startsWith(start))!.value;
+const budget = run('budget-split');
+const card = run('credit-card-payoff');
+const late = run('late-starter-savings');
+const mort = run('mortgage-extra-payments');
+const basics = [
+  {
+    title: 'Spend less than you earn, on purpose',
+    stat: row(budget, 'After 10 years'),
+    text: `is what ${budget.headline.value} a month left over grows to in 10 years, at an assumed 5% a year.`,
+    slug: 'budget-split',
+  },
+  {
+    title: 'Clear expensive debt first',
+    stat: card.headline.value,
+    text: `in interest saved by paying $100 a month over the minimum on an $8,000 card at 22%.`,
+    slug: 'credit-card-payoff',
+  },
+  {
+    title: 'Start saving early, even small',
+    stat: late.headline.value,
+    text: 'is the cost of waiting five years to start saving $300 a month, by age 65 (7% a year assumed).',
+    slug: 'late-starter-savings',
+  },
+  {
+    title: 'Pay your home off faster',
+    stat: mort.headline.value,
+    text: `in interest saved by adding $150 a month to a $250,000 mortgage at 6.5%.`,
+    slug: 'mortgage-extra-payments',
+  },
+];
 ---
 <Base
   title={SITE.name}
-  description="Free calculators that show what your money decisions really cost, using your own numbers. Unlock them all with your email."
+  description="Personal finance made simple: free calculators that show what your money decisions really cost, using your own numbers, plus plain-English guides on budgeting, debt, saving and home loans."
   jsonLd={[
     { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE.name, url: site },
     { '@context': 'https://schema.org', '@type': 'Organization', name: SITE.legalName, url: site },
@@ -21,10 +63,33 @@ const site = Astro.site!.href.replace(/\/$/, '') + import.meta.env.BASE_URL.repl
 >
   <Hero />
 
+  <section class="wrap block" aria-labelledby="topics-h">
+    <p class="eyebrow">Personal finance, one topic at a time</p>
+    <h2 id="topics-h">Start with what’s on your mind.</h2>
+    <p class="lead">Calculators that use your own numbers, and guides that explain them in plain English.</p>
+    <div class="grid topics">
+      {topics.map((t) => <TopicCard topic={t} calcCount={calculators.filter((c) => (c.topics as string[]).includes(t.slug)).length} postCount={all.filter((p) => p.data.topic === t.slug).length} />)}
+    </div>
+  </section>
+
+  <section class="wrap block" aria-labelledby="basics-h">
+    <p class="eyebrow">The basics</p>
+    <h2 id="basics-h">Four money habits, in real numbers.</h2>
+    <ol class="basics">
+      {basics.map((b, i) => (
+        <li class="card basic">
+          <span class="n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+          <h3>{b.title}</h3>
+          <p><strong class="stat">{b.stat}</strong> {b.text}</p>
+          <a href={u(`/calculators/${b.slug}`)}>Try it with your numbers <span aria-hidden="true">→</span></a>
+        </li>
+      ))}
+    </ol>
+  </section>
+
   <section class="wrap block" aria-labelledby="calcs-h">
-    <p class="eyebrow">The calculators</p>
+    <p class="eyebrow">Free calculators</p>
     <h2 id="calcs-h">Your numbers, not an average.</h2>
-    <p class="lead">Each one shows the real cost of a choice, and every assumption behind it.</p>
     <div class="grid">{calculators.map((c) => <CalcTile calc={c} />)}</div>
   </section>
 
@@ -33,22 +98,43 @@ const site = Astro.site!.href.replace(/\/$/, '') + import.meta.env.BASE_URL.repl
     <div class="grid">
       <div><h3>Assumptions on show</h3><p>Every result sits beside the assumptions behind it, so you can judge it, not just believe it.</p></div>
       <div><h3>Your numbers stay with you</h3><p>The sums run in your browser. The figures you type never leave your device.</p></div>
-      <div><h3>Explained in plain English</h3><p>Each calculator has an article that walks through the thinking, with the calculator right there.</p></div>
+      <div><h3>Plain English, no sales pitch</h3><p>We explain how money works, and we’ll always tell you if a link ever earns us a commission.</p></div>
     </div>
   </section>
 
   {posts.length > 0 && (
     <section class="wrap block" aria-labelledby="blog-h">
-      <p class="eyebrow">From the blog</p>
+      <p class="eyebrow">Latest guides</p>
       <h2 id="blog-h">The thinking behind the numbers.</h2>
       <div class="grid">{posts.map((p) => <PostCard post={p} />)}</div>
-      <p style="margin-top:22px"><a href={u("/blog")}>All articles →</a></p>
+      <p style="margin-top:22px"><a href={u('/blog')}>All articles <span aria-hidden="true">→</span></a></p>
     </section>
   )}
+
+  <section class="wrap block" aria-labelledby="end-h">
+    <div class="card end-cta">
+      <div>
+        <h2 id="end-h">Make your next money decision with the numbers in front of you.</h2>
+        <p class="muted">Free access to every calculator, plus our plain-English guide. Unsubscribe any time.</p>
+      </div>
+      <SignupForm id="home-end" cta="Get free access" />
+    </div>
+  </section>
 </Base>
 
 <style>
-  .block { margin-top: clamp(64px, 9vw, 120px); }
+  .block { margin-top: clamp(64px, 9vw, 112px); }
+  .topics { margin-top: 8px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); }
+  .basics { list-style: none; padding: 0; margin: 0; display: grid; gap: 18px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); }
+  .basic { padding: 24px; display: grid; gap: 10px; align-content: start; }
+  .basic .n { font: 600 .85rem/1 var(--sans); letter-spacing: .1em; color: var(--muted); }
+  .basic h3 { margin: 0; font-size: 1.2rem; }
+  .basic p { margin: 0; color: var(--muted); }
+  .basic .stat { display: block; font: 700 clamp(1.7rem, 3vw, 2.1rem)/1.1 var(--serif); color: var(--accent); margin-bottom: 4px; font-variant-numeric: tabular-nums; }
+  .basic a { font-weight: 600; margin-top: 4px; white-space: nowrap; }
   .trust h3 { font-size: 1.15rem; margin-bottom: .3em; }
   .trust p { color: var(--muted); }
+  .end-cta { padding: clamp(24px, 4vw, 40px); display: grid; gap: 20px; background: var(--accent-soft); box-shadow: none; }
+  @media (min-width: 900px) { .end-cta { grid-template-columns: 1fr 1fr; align-items: center; } }
+  .end-cta h2 { font-size: clamp(1.5rem, 2.4vw, 2rem); }
 </style>

@@ -5,6 +5,7 @@ import { money } from '../format';
 const def: CalculatorDef = {
   slug: 'late-starter-savings',
   title: 'Late-starter savings: the cost of waiting',
+  topics: ['saving'],
   blurb: 'What does putting off saving for a few years really cost by the time you retire?',
   inputs: [
     { id: 'monthly', label: 'Monthly amount you save', kind: 'money', default: 300, min: 0, max: 1e6 },

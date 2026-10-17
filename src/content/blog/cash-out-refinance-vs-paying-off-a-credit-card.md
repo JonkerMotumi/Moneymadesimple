@@ -2,7 +2,7 @@
 title: "Cash-out refinance vs paying off a credit card"
 description: "Rolling a $12,000 credit card into your mortgage can cut your monthly payment, yet cost over $100,000 more in total. See when it helps and when it hurts."
 date: 2026-10-13
-category: "Mortgages"
+topic: "debt"
 tags: ["refinance", "mortgage", "credit card", "debt"]
 calculator: "cash-out-refinance-vs-credit-card"
 ---

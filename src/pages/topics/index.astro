@@ -1,0 +1,18 @@
+---
+import Base from '../../layouts/Base.astro';
+import TopicCard from '../../components/TopicCard.astro';
+import { topics } from '../../lib/topics';
+import { calculators } from '../../lib/calculators';
+import { allPosts } from '../../lib/blog';
+const posts = await allPosts();
+---
+<Base title="Money topics" description="Everyday personal finance topics explained simply: budgeting, debt and credit, saving and investing, and home loans. Each with free calculators and plain-English articles.">
+  <div class="wrap page-head">
+    <p class="eyebrow">Topics</p>
+    <h1>Pick what’s on your mind.</h1>
+    <p>Every topic has free calculators that use your own numbers and articles that explain the thinking in plain English.</p>
+  </div>
+  <div class="wrap"><div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr))">
+    {topics.map((t) => <TopicCard topic={t} calcCount={calculators.filter((c) => c.topics.includes(t.slug)).length} postCount={posts.filter((p) => p.data.topic === t.slug).length} />)}
+  </div></div>
+</Base>

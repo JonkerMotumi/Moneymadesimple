@@ -2,7 +2,7 @@
 title: "The cost of waiting five years to start saving"
 description: "Saving $300 a month from age 30 builds about $540,000 by 65. Start five years later and you finish with about $174,000 less. Here's the maths."
 date: 2026-10-14
-category: "Saving & investing"
+topic: "saving"
 tags: ["saving", "compound growth", "retirement"]
 calculator: "late-starter-savings"
 ---

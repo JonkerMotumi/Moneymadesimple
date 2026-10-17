@@ -1,0 +1,88 @@
+---
+import Base from '../../layouts/Base.astro';
+import TopicIcon from '../../components/TopicIcon.astro';
+import CalcTile from '../../components/CalcTile.astro';
+import PostCard from '../../components/PostCard.astro';
+import SignupForm from '../../components/SignupForm.astro';
+import { topics, type Topic } from '../../lib/topics';
+import { calculators } from '../../lib/calculators';
+import { allPosts } from '../../lib/blog';
+import { u } from '../../lib/url';
+
+export function getStaticPaths() {
+  return topics.map((t) => ({ params: { slug: t.slug }, props: { topic: t as Topic } }));
+}
+const { topic } = Astro.props;
+const calcs = calculators.filter((c) => (c.topics as string[]).includes(topic.slug));
+const posts = (await allPosts()).filter((p) => p.data.topic === topic.slug);
+const others = topics.filter((t) => t.slug !== topic.slug);
+const site = Astro.site!.href.replace(/\/$/, '') + import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<Base
+  title={`${topic.name}: calculators and guides`}
+  description={`${topic.blurb} Free ${topic.name.toLowerCase()} calculators and plain-English articles.`}
+  jsonLd={{
+    '@context': 'https://schema.org', '@type': 'CollectionPage', name: topic.name, description: topic.blurb, url: `${site}/topics/${topic.slug}`,
+  }}
+>
+  <div class="wrap page-head topic-head">
+    <p class="eyebrow"><a href={u('/topics')} style="text-decoration:none">Topics</a></p>
+    <div class="title-row">
+      <span class="badge"><TopicIcon icon={topic.icon} size={30} /></span>
+      <h1>{topic.name}</h1>
+    </div>
+    <p class="lead">{topic.blurb}</p>
+  </div>
+
+  <section class="wrap" aria-labelledby="basics-h">
+    <div class="card basics">
+      <h2 id="basics-h">The basics</h2>
+      <ol>{topic.basics.map((b) => <li>{b}</li>)}</ol>
+    </div>
+  </section>
+
+  {calcs.length > 0 && (
+    <section class="wrap block" aria-labelledby="tc-h">
+      <h2 id="tc-h">Calculators</h2>
+      <div class="grid">{calcs.map((c) => <CalcTile calc={c} />)}</div>
+    </section>
+  )}
+
+  {posts.length > 0 && (
+    <section class="wrap block" aria-labelledby="tp-h">
+      <h2 id="tp-h">Articles</h2>
+      <div class="grid">{posts.map((p) => <PostCard post={p} />)}</div>
+    </section>
+  )}
+
+  <section class="wrap block" aria-labelledby="cta-h">
+    <div class="card cta-band">
+      <div>
+        <h2 id="cta-h">Unlock every calculator, free</h2>
+        <p class="muted">Enter your email once to see your results on every calculator, and get our free guide.</p>
+      </div>
+      <SignupForm id={`topic-${topic.slug}`} cta="Get free access" />
+    </div>
+  </section>
+
+  <nav class="wrap block" aria-label="Other topics">
+    <h2 class="small">Other topics</h2>
+    <p class="others">{others.map((t) => <a class="pill" href={u(`/topics/${t.slug}`)}>{t.name}</a>)}</p>
+  </nav>
+</Base>
+
+<style>
+  .title-row { display: flex; align-items: center; gap: 16px; }
+  .title-row h1 { margin: 0; }
+  .badge { flex: none; width: 60px; height: 60px; border-radius: 18px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); }
+  .topic-head .lead { margin-top: 14px; }
+  .basics { padding: 26px 28px; }
+  .basics h2 { font-size: 1.4rem; }
+  .basics ol { margin: 0; padding-left: 1.3em; display: grid; gap: 10px; font-size: 1.05rem; }
+  .block { margin-top: 56px; }
+  .cta-band { padding: 28px; display: grid; gap: 18px; background: var(--accent-soft); box-shadow: none; }
+  @media (min-width: 900px) { .cta-band { grid-template-columns: 1fr 1fr; align-items: center; } }
+  .cta-band h2 { font-size: 1.5rem; }
+  .small { font-size: 1.1rem; }
+  .others { display: flex; flex-wrap: wrap; gap: 8px; }
+</style>

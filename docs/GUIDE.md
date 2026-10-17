@@ -10,6 +10,7 @@ Everything here is yours: the code (this repo), the content (Markdown files in t
 | Calculators (maths) | `src/lib/calculators/finance.ts`, one file per calculator in `src/lib/calculators/defs/` |
 | Calculator page + gate | `src/components/CalculatorApp.astro`, `src/scripts/calculator.ts` |
 | Signup endpoint (MailerLite) | `functions/api/subscribe.js` |
+| Topics (Budgeting, Debt & credit, Saving & investing, Home & mortgages) | `src/lib/topics.ts` |
 | Blog posts | `src/content/blog/*.md` |
 | Colours, fonts, spacing | `src/styles/global.css` (top of the file) |
 | Site name, currency, contact email | `src/config.ts` |
@@ -35,7 +36,7 @@ Create a file in `src/content/blog/`, for example `my-new-post.md`. The file nam
 title: "Keep under about 60 characters"
 description: "One or two sentences, 50-170 characters. Shown in Google results."
 date: 2026-11-01
-category: "Mortgages"          # creates /blog/category/mortgages automatically
+topic: "home"                  # one of: budgeting, debt, saving, home (see src/lib/topics.ts)
 tags: ["mortgage", "interest"]
 calculator: "mortgage-extra-payments"   # optional: embeds that calculator under the article
 affiliate: false               # true shows the affiliate disclosure at the top
@@ -44,21 +45,27 @@ draft: false                   # true hides it from the live site
 Write in normal Markdown here. Use ## for headings and | tables | like this |.
 ```
 
-Every post automatically gets: SEO title/description, clean URL, sitemap entry, structured data, a reading time, related posts and the "Get the free guide" invitation at the end.
+Every post appears on its topic page (`/topics/<topic>`) and automatically gets: SEO title/description, clean URL, sitemap entry, structured data, a reading time, related posts and the "Get the free guide" invitation at the end.
 
 ## Add a calculator
 
 1. Copy any file in `src/lib/calculators/defs/` to a new file, e.g. `savings-goal.ts`.
-2. Change the `slug`, `title`, `blurb`, `inputs` (the fields), `assumptions` (always shown beside results) and `compute` (your formula).
+2. Change the `slug`, `title`, `topics` (which topic pages list it), `blurb`, `inputs` (the fields), `assumptions` (always shown beside results) and `compute` (your formula).
 3. Put reusable maths in `finance.ts` and add a test in `tests/`.
 
-That is all. The calculator is picked up automatically: it appears on the home page, in `/calculators`, gets its own page `/calculators/<slug>`, the email gate, the sitemap entry, and can be embedded in a post with `calculator: "<slug>"`.
+That is all. The calculator is picked up automatically: it appears on the home page, in `/calculators`, on its topic pages, gets its own page `/calculators/<slug>`, the email gate, the sitemap entry, and can be embedded in a post with `calculator: "<slug>"`.
 
 `compute(values)` receives the numbers the visitor typed (keyed by each input's `id`) and returns a headline number, a list of rows, optionally a two-line chart, and optional warnings. Look at an existing file; they are short.
 
 ### Plugging in your own formulas and test cases
 
 The four launch calculators use standard formulas, written down as the "assumptions" on each page. When you send your formulas and test cases, replace the maths in that calculator's file and add your cases to `tests/calculators.test.ts` (each is one `expect(...)`). `npm test` must pass before you publish.
+
+## Add or change a topic
+
+Topics live in `src/lib/topics.ts`: a name, a one-line blurb, three "basics" (rules of thumb shown on the topic page) and an icon. Add one and its page `/topics/<slug>` appears, it shows on the home page and calculators page, and posts and calculators can point at it.
+
+The four "money habits" figures on the home page are calculated from the calculators at build time, so they always match the calculators. To change the example numbers, edit `src/pages/index.astro`.
 
 ## Going live (recommended: Cloudflare Pages)
 

@@ -5,6 +5,7 @@ import { duration, money } from '../format';
 const def: CalculatorDef = {
   slug: 'credit-card-payoff',
   title: 'Credit card payoff: minimums vs extra payments',
+  topics: ['debt'],
   blurb: 'See how much interest and time a little extra each month saves on a credit card.',
   inputs: [
     { id: 'balance', label: 'Card balance', kind: 'money', default: 8000, min: 1, max: 1e7 },

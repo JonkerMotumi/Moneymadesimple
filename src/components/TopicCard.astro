@@ -1,0 +1,23 @@
+---
+import TopicIcon from './TopicIcon.astro';
+import { u } from '../lib/url';
+import type { Topic } from '../lib/topics';
+interface Props { topic: Topic; calcCount: number; postCount: number }
+const { topic, calcCount, postCount } = Astro.props;
+const plural = (n: number, w: string) => `${n} ${w}${n === 1 ? '' : 's'}`;
+---
+<a class="card topic-card" href={u(`/topics/${topic.slug}`)}>
+  <span class="topic-badge"><TopicIcon icon={topic.icon} /></span>
+  <h3>{topic.name}</h3>
+  <p>{topic.blurb}</p>
+  <span class="topic-meta">{plural(calcCount, 'calculator')} · {plural(postCount, 'article')}</span>
+</a>
+<style>
+  .topic-card { padding: 24px; display: grid; gap: 10px; align-content: start; text-decoration: none; color: var(--ink); transition: transform .2s ease, border-color .2s ease; }
+  .topic-card:hover { transform: translateY(-2px); border-color: var(--accent); }
+  .topic-card h3 { margin: 4px 0 0; }
+  .topic-card p { margin: 0; color: var(--muted); font-size: .97rem; }
+  .topic-meta { font-size: .85rem; color: var(--accent); font-weight: 600; }
+  .topic-badge { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); }
+  @media (prefers-reduced-motion: reduce) { .topic-card:hover { transform: none; } }
+</style>

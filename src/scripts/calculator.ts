@@ -126,7 +126,7 @@ function chart(c: ChartDef, m: (s: string) => string): HTMLElement {
     const k = Math.min(accent.points.length, muted.points.length);
     const top = accent.points.slice(0, k);
     const bot = muted.points.slice(0, k);
-    add('path', { class: 'a-fill', d: d(top) + 'L' + bot.map((v, i) => `${X(k - 1 - i).toFixed(1)} ${Y(bot[k - 1 - i]).toFixed(1)}`).join('L') + 'Z' });
+    add('path', { class: 'a-fill', d: d(top) + 'L' + bot.map((_, i) => `${X(k - 1 - i).toFixed(1)} ${Y(bot[k - 1 - i]).toFixed(1)}`).join('L') + 'Z' });
   }
   if (muted) add('path', { class: 'l-muted', d: d(muted.points) });
   if (accent) add('path', { class: 'l-accent', d: d(accent.points) });

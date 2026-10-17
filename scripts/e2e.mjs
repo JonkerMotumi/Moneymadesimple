@@ -6,7 +6,7 @@ let fail = 0;
 const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fail++; };
 
 // 1. No horizontal scroll on any page at phone width
-const pages = ['/', '/calculators', '/calculators/credit-card-payoff', '/calculators/mortgage-extra-payments', '/calculators/late-starter-savings', '/calculators/cash-out-refinance-vs-credit-card', '/blog', '/blog/cost-of-waiting-to-start-saving', '/privacy', '/terms', '/unsubscribe'];
+const pages = ['/', '/topics', '/topics/budgeting', '/topics/debt', '/topics/saving', '/topics/home', '/calculators', '/calculators/budget-split', '/blog/50-30-20-budget-in-plain-numbers', '/calculators/credit-card-payoff', '/calculators/mortgage-extra-payments', '/calculators/late-starter-savings', '/calculators/cash-out-refinance-vs-credit-card', '/blog', '/blog/cost-of-waiting-to-start-saving', '/privacy', '/terms', '/unsubscribe'];
 {
   const ctx = await browser.newContext({ viewport: { width: 360, height: 740 }, isMobile: true });
   const p = await ctx.newPage();
@@ -15,6 +15,24 @@ const pages = ['/', '/calculators', '/calculators/credit-card-payoff', '/calcula
     const [sw, iw] = await p.evaluate(() => [document.documentElement.scrollWidth, innerWidth]);
     ok(sw <= iw, `no horizontal overflow ${u} (${sw}/${iw})`);
   }
+  await ctx.close();
+}
+
+// 1b. Mobile menu opens, is keyboard-closable, and links work
+{
+  const ctx = await browser.newContext({ viewport: { width: 375, height: 740 }, isMobile: true, hasTouch: true });
+  const p = await ctx.newPage();
+  await p.goto(base + '/'); await p.waitForTimeout(300);
+  ok(!(await p.locator('#site-nav').isVisible()), 'mobile: nav hidden behind menu button');
+  await p.click('[data-menu-toggle]');
+  ok(await p.locator('#site-nav').isVisible(), 'mobile: menu opens');
+  ok((await p.getAttribute('[data-menu-toggle]', 'aria-expanded')) === 'true', 'mobile: aria-expanded reflects state');
+  await p.keyboard.press('Escape');
+  ok(!(await p.locator('#site-nav').isVisible()), 'mobile: Escape closes menu');
+  await p.click('[data-menu-toggle]');
+  await p.click('#site-nav a:has-text("Topics")');
+  await p.waitForLoadState();
+  ok(/\/topics\/?$/.test(p.url()), 'mobile: menu link navigates');
   await ctx.close();
 }
 

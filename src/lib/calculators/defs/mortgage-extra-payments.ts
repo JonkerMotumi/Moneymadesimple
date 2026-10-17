@@ -5,6 +5,7 @@ import { duration, money } from '../format';
 const def: CalculatorDef = {
   slug: 'mortgage-extra-payments',
   title: 'Mortgage extra payments: interest and time saved',
+  topics: ['home'],
   blurb: 'Add a little to your bond each month and see the interest and years it takes off.',
   inputs: [
     { id: 'balance', label: 'Mortgage balance today', kind: 'money', default: 250000, min: 1, max: 1e8 },

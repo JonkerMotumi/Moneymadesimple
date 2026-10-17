@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { calculators, defaults } from '../src/lib/calculators';
+import { topics } from '../src/lib/topics';
 
 // Replace/extend the expected values here with your own test cases.
 describe('registry', () => {
-  it('registers the four launch calculators with unique slugs', () => {
+  it('registers the calculators with unique slugs', () => {
     expect(calculators.map((c) => c.slug).sort()).toEqual([
+      'budget-split',
       'cash-out-refinance-vs-credit-card',
       'credit-card-payoff',
       'late-starter-savings',
@@ -18,6 +20,28 @@ describe('registry', () => {
       expect(c.assumptions.length).toBeGreaterThan(2);
       expect(JSON.stringify(out)).not.toMatch(/NaN|Infinity|undefined/);
     }
+  });
+});
+
+describe('topics', () => {
+  it('every calculator belongs to at least one real topic', () => {
+    for (const c of calculators) {
+      expect(c.topics.length).toBeGreaterThan(0);
+      for (const t of c.topics) expect(topics.map((x) => x.slug)).toContain(t);
+    }
+  });
+});
+
+describe('budget split', () => {
+  it('4,000 pay, 2,200 needs, 1,100 wants leaves 700 (18%)', () => {
+    const out = get('budget-split').compute(defaults(get('budget-split')));
+    expect(out.headline.value).toBe('$700');
+    expect(out.headline.sub).toMatch(/^18%/);
+  });
+  it('overspending is reported as such', () => {
+    const out = get('budget-split').compute({ income: 3000, needs: 2500, wants: 800 });
+    expect(out.headline.label).toMatch(/overspending/);
+    expect(out.headline.value).toBe('$300');
   });
 });
 

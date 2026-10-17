@@ -1,10 +1,11 @@
 ---
 import { u } from '../lib/url';
-import { fmtDate, readingMinutes, slugify, type Post } from '../lib/blog';
+import { fmtDate, readingMinutes, type Post } from '../lib/blog';
+import { getTopic } from '../lib/topics';
 const { post } = Astro.props as { post: Post };
 ---
 <a class="card tile" href={u(`/blog/${post.id}`)}>
-  <span class="pill">{post.data.category}</span>
+  <span class="pill">{getTopic(post.data.topic)?.name}</span>
   <h3>{post.data.title}</h3>
   <p>{post.data.description}</p>
   <span class="meta muted">{fmtDate(post.data.date)} · {readingMinutes(post.body)} min read</span>

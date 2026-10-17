@@ -2,7 +2,7 @@
 title: "How extra mortgage payments save years and thousands"
 description: "Adding $150 a month to a $250,000 mortgage can save over $52,000 in interest and take more than four years off the loan. Here's why, and how to check yours."
 date: 2026-10-15
-category: "Mortgages"
+topic: "home"
 tags: ["mortgage", "bond", "interest"]
 calculator: "mortgage-extra-payments"
 ---

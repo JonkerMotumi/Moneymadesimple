@@ -42,9 +42,13 @@ export interface CalcOutput {
   notes?: string[];
 }
 
+import type { TopicSlug } from '../topics';
+
 export interface CalculatorDef {
   slug: string;
   title: string;
+  /** Which topic pages list this calculator (see src/lib/topics.ts). */
+  topics: TopicSlug[];
   /** One sentence for cards and meta descriptions. */
   blurb: string;
   inputs: InputDef[];

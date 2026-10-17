@@ -2,7 +2,7 @@
 title: "What minimum credit card payments really cost"
 description: "An $8,000 card balance at 22% takes over 23 years to clear on minimums. See how a modest extra payment each month changes the whole picture."
 date: 2026-10-16
-category: "Credit cards"
+topic: "debt"
 tags: ["credit card", "debt", "interest"]
 calculator: "credit-card-payoff"
 ---
